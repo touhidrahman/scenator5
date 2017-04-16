@@ -1,10 +1,9 @@
 #include <jni.h>
 #include <string>
-#include <opencv2/core/core.hpp>
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_msgsd_mobapps_scenator5_MainActivity_stringFromJNI(
+Java_msgsd_mobapps_scenator5_MainActivity_testJNI(
         JNIEnv *env,
         jobject /* this */) {
     std::string hello = "Hello from C++";

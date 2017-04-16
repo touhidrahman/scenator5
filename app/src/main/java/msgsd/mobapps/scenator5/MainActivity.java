@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
                     break;
                 default:
                     super.onManagerConnected(status);
+                    break;
             }
         }
     };
@@ -49,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
             Log.i(TAG, "OpenCV not loaded");
         }
     }
+
+    public static native String testJNI();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +99,10 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
 
     @Override
     public void onCameraViewStarted(int width, int height) {
+        // for RGBA pic
         mRgba = new Mat(height, width, CvType.CV_8UC4);
+
+        // for Grayscale pic
         mGray = new Mat(height, width, CvType.CV_8UC1);
     }
 
@@ -108,8 +114,9 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         mRgba = inputFrame.rgba();
-        Imgproc.cvtColor(mRgba, mGray, Imgproc.COLOR_RGB2GRAY);
-//        return mRgba;
-        return mGray;
+        // apply filters (Test)
+        // Imgproc.cvtColor(mRgba, mGray, Imgproc.COLOR_RGB2GRAY);
+        return mRgba;
+        // return mGray;
     }
 }
