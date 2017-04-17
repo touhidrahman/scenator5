@@ -25,6 +25,14 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     Mat mRgba;
     Mat mGray;
 
+
+    // Used to load the 'native-lib' library on application startup.
+    static {
+        System.loadLibrary("opencv_java3");
+        System.loadLibrary("opencv_java");
+        System.loadLibrary("native-lib");
+    }
+
     // base callback loader
     BaseLoaderCallback loaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -40,18 +48,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         }
     };
 
-    // Used to load the 'native-lib' library on application startup.
-    static {
-        System.loadLibrary("native-lib");
 
-        if (OpenCVLoader.initDebug()) {
-            Log.i(TAG, "OpenCV loaded successfully.");
-        } else {
-            Log.i(TAG, "OpenCV not loaded");
-        }
-    }
-
-    public static native String testJNI();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,14 +106,19 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     @Override
     public void onCameraViewStopped() {
         mRgba.release();
+        mGray.release();
     }
 
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         mRgba = inputFrame.rgba();
+        mGray = inputFrame.gray();
         // apply filters (Test)
         // Imgproc.cvtColor(mRgba, mGray, Imgproc.COLOR_RGB2GRAY);
+        objDetection(mGray.getNativeObjAddr(), mRgba.getNativeObjAddr());
         return mRgba;
-        // return mGray;
     }
+
+    // native functions used with opencv
+    public native static void objDetection(long addrGray, long addrRgba);
 }
